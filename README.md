@@ -33,6 +33,7 @@ fs.writeFileSync('out.png', text2png('Hello!', {color: 'blue'}));
 |---|---|
 |text|(required)|
 |option.font|'30px sans-serif'|
+|option.textHeight|30|
 |option.textAlign|'left'|
 |option.color (or option.textColor)|'black'|
 |option.backgroundColor (or option.bgColor)|'transparent'|

@@ -5,6 +5,7 @@ const { registerFont, createCanvas } = require("canvas");
  * @param text
  * @param [options]
  * @param [options.font="30px sans-serif"] css style font
+ * @param [options.textHeight=30] text height
  * @param [options.textAlign="left"] text alignment (left, center, right)
  * @param [options.color="black"] (or options.textColor) text color
  * @param [options.backgroundColor] (or options.bgColor) background color
@@ -65,7 +66,8 @@ const text2png = (text, options = {}) => {
     return { line, left, right, ascent, descent };
   });
 
-  const lineHeight = max.ascent + max.descent + options.lineSpacing;
+  //const lineHeight = max.ascent + max.descent + options.lineSpacing;
+  const lineHeight = options.textHeight + options.lineSpacing;
 
   const contentWidth = max.left + max.right;
   const contentHeight =
@@ -120,8 +122,6 @@ const text2png = (text, options = {}) => {
   ctx.fillStyle = options.textColor;
   ctx.antialias = "gray";
   ctx.textAlign = options.textAlign;
-  ctx.lineWidth = options.strokeWidth;
-  ctx.strokeStyle = options.strokeColor;
 
   let offsetY = options.borderTopWidth + options.paddingTop;
   lineProps.forEach(lineProp => {
@@ -176,6 +176,7 @@ const text2png = (text, options = {}) => {
 function parseOptions(options) {
   return {
     font: or(options.font, "30px sans-serif"),
+    textHeight: or(options.textHeight, 30),
     textAlign: or(options.textAlign, "left"),
     textColor: or(options.textColor, options.color, "black"),
     backgroundColor: or(options.bgColor, options.backgroundColor, null),
