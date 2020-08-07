@@ -47,7 +47,7 @@ const text2png = (text, options = {}) => {
     descent: 0
   };
 
-  let lastDescent;
+  let lastDescent = 0;
   const lineProps = text.split("\n").map(line => {
     ctx.font = options.font;
     const metrics = ctx.measureText(line);
@@ -72,8 +72,8 @@ const text2png = (text, options = {}) => {
   const contentWidth = max.left + max.right;
   const contentHeight =
     lineHeight * lineProps.length -
-    options.lineSpacing -
-    (max.descent - lastDescent);
+    options.lineSpacing + max.descent;// -
+    //(max.descent - lastDescent);
 
   canvas.width =
     contentWidth +
