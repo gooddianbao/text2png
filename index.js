@@ -41,6 +41,7 @@ const text2png = (text, options = {}) => {
   const ctx = canvas.getContext("2d");
 
   const max = {
+    width: 0,
     left: 0,
     right: 0,
     ascent: 0,
@@ -51,19 +52,21 @@ const text2png = (text, options = {}) => {
   const lineProps = text.split("\n").map(line => {
     ctx.font = options.font;
     const metrics = ctx.measureText(line);
+    const lineNoSpaces = line.replace(/\s/g, '');
 
-    const left = -1 * metrics.actualBoundingBoxLeft;
+    const left = metrics.actualBoundingBoxLeft;
     const right = metrics.actualBoundingBoxRight;
     const ascent = metrics.actualBoundingBoxAscent;
     const descent = metrics.actualBoundingBoxDescent;
 
-    max.left = Math.max(max.left, left);
-    max.right = Math.max(max.right, right);
+    max.width = metrics.width;
+    max.left = -1 * metrics.actualBoundingBoxLeft;
+    max.right = right;
     max.ascent = Math.max(max.ascent, ascent);
     max.descent = Math.max(max.descent, descent);
     lastDescent = descent;
 
-    return { line, left, right, ascent, descent };
+    return { line: lineNoSpaces, left, right, ascent, descent };
   });
 
   //const lineHeight = max.ascent + max.descent + options.lineSpacing;
@@ -76,7 +79,7 @@ const text2png = (text, options = {}) => {
     //(max.descent - lastDescent);
 
   canvas.width =
-    contentWidth +
+    max.width +
     options.borderLeftWidth +
     options.borderRightWidth +
     options.paddingLeft +
