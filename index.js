@@ -52,7 +52,7 @@ const text2png = (text, options = {}) => {
   const lineProps = text.split("\n").map(line => {
     ctx.font = options.font;
     const metrics = ctx.measureText(line);
-    const lineNoSpaces = line.replace(/\s/g, '');
+    const lineTrimSpaces = line.trim();
 
     const left = metrics.actualBoundingBoxLeft;
     const right = metrics.actualBoundingBoxRight;
@@ -66,7 +66,7 @@ const text2png = (text, options = {}) => {
     max.descent = Math.max(max.descent, descent);
     lastDescent = descent;
 
-    return { line: lineNoSpaces, left, right, ascent, descent };
+    return { line: lineTrimSpaces, left, right, ascent, descent };
   });
 
   //const lineHeight = max.ascent + max.descent + options.lineSpacing;
@@ -143,7 +143,7 @@ const text2png = (text, options = {}) => {
       case "right":
         x =
           canvas.width -
-          lineProp.left -
+          lineProp.right -
           options.borderRightWidth -
           options.paddingRight;
         break;
