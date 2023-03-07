@@ -59,9 +59,9 @@ const text2png = (text, options = {}) => {
     const ascent = metrics.actualBoundingBoxAscent;
     const descent = metrics.actualBoundingBoxDescent;
 
-    max.width = metrics.width;
-    max.left = -1 * metrics.actualBoundingBoxLeft;
-    max.right = right;
+    max.width = Math.max(metrics.width, max.width);
+    max.left = Math.max(left, max.left);
+    max.right = Math.max(right, max.right);
     max.ascent = Math.max(max.ascent, ascent);
     max.descent = Math.max(max.descent, descent);
     lastDescent = descent;
