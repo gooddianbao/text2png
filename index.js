@@ -76,7 +76,7 @@ const text2png = (text, options = {}) => {
   const contentHeight =
     lineHeight * lineProps.length -
     options.lineSpacing + max.descent;// -
-    //(max.descent - lastDescent);
+  //(max.descent - lastDescent);
 
   canvas.width =
     max.width +
@@ -124,7 +124,6 @@ const text2png = (text, options = {}) => {
   ctx.font = options.font;
   ctx.fillStyle = options.textColor;
   ctx.antialias = "gray";
-  ctx.textAlign = options.textAlign;
 
   let offsetY = options.borderTopWidth + options.paddingTop;
   lineProps.forEach(lineProp => {
@@ -133,29 +132,11 @@ const text2png = (text, options = {}) => {
     let y = max.ascent + offsetY;
 
     // Calculate X
-    switch (options.textAlign) {
-      case "start":
-      case "left":
-        x = lineProp.left + options.borderLeftWidth + options.paddingLeft;
-        break;
-
-      case "end":
-      case "right":
-        x =
-          canvas.width -
-          lineProp.right -
-          options.borderRightWidth -
-          options.paddingRight;
-        break;
-
-      case "center":
-        x = contentWidth / 2 + options.borderLeftWidth + options.paddingLeft;
-        break;
-    }
+    x = lineProp.left + options.borderLeftWidth + options.paddingLeft;
 
     ctx.fillText(lineProp.line, x, y);
 
-    if ( options.strokeWidth > 0 ) {
+    if (options.strokeWidth > 0) {
       ctx.strokeText(lineProp.line, x, y);
     }
 
