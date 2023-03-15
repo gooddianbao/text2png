@@ -52,12 +52,11 @@ const text2png = (text, options = {}) => {
   const lineProps = text.split("\n").map(line => {
     ctx.font = options.font;
     const metrics = ctx.measureText(line);
-    const lineTrimSpaces = line.trim();
 
     const left = metrics.actualBoundingBoxLeft;
     const right = metrics.actualBoundingBoxRight;
-    const ascent = metrics.actualBoundingBoxAscent;
-    const descent = metrics.actualBoundingBoxDescent;
+    const ascent = metrics.emHeightAscent;
+    const descent = metrics.emHeightDescent;
 
     max.width = Math.max(metrics.width, max.width);
     max.left = Math.max(left, max.left);
@@ -66,16 +65,16 @@ const text2png = (text, options = {}) => {
     max.descent = Math.max(max.descent, descent);
     lastDescent = descent;
 
-    return { line: lineTrimSpaces, left, right, ascent, descent };
+    return { line: line, left, right, ascent, descent };
   });
 
   //const lineHeight = max.ascent + max.descent + options.lineSpacing;
-  const lineHeight = options.textHeight + options.lineSpacing;
+  const lineHeight = max.ascent + max.descent + options.lineSpacing;
 
   const contentWidth = max.left + max.right;
   const contentHeight =
     lineHeight * lineProps.length -
-    options.lineSpacing + max.descent;// -
+    options.lineSpacing;// -
   //(max.descent - lastDescent);
 
   canvas.width =
@@ -125,14 +124,14 @@ const text2png = (text, options = {}) => {
   ctx.fillStyle = options.textColor;
   ctx.antialias = "gray";
 
-  let offsetY = options.borderTopWidth + options.paddingTop;
+  let offsetY = lineHeight - max.descent + options.borderTopWidth + options.paddingTop;
   lineProps.forEach(lineProp => {
     // Calculate Y
     let x = 0;
-    let y = max.ascent + offsetY;
+    let y = offsetY;
 
     // Calculate X
-    x = lineProp.left + options.borderLeftWidth + options.paddingLeft;
+    x = options.borderLeftWidth + options.paddingLeft;
 
     ctx.fillText(lineProp.line, x, y);
 
